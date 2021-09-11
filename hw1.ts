@@ -3,7 +3,7 @@
 ** ============================================================================ */
 
 export const HONOR_PLEDGE = "I pledge on my honor that this assignment is my own work.";
-export const SIGNATURE = "<your-full-name-here>"; // TODO: FILL ME IN
+export const SIGNATURE = "MST JASMINE JAHAN"; // TODO: FILL ME IN
 
 // If you had any collaborators on this assignment, please list their github handles here.
 export const COLLABORATORS = [
@@ -12,7 +12,7 @@ export const COLLABORATORS = [
 
 // If you used any resources, please list them here
 export const RESOURCES_CONSULTED = [
-    "www.google.com", // TODO: FILL ME IN
+    "www.google.com", "FirefoxMDN", "repl.it", "Udemy", "You tube"// TODO: FILL ME IN
 ];
 
 
@@ -48,7 +48,12 @@ Write sum of squares **iteratively**.
 
 export function iterSumOfSquare(n: number): number {
     // TODO: implement me
-    return 0;
+    let sum = 0;
+    for(let i = 1; i<=n; i++){
+        sum = sum + (i*i);
+    }
+    return sum;
+    //return 0;
 }
 
 
@@ -60,7 +65,13 @@ Write sum of squares **recursively**.
 
 export function recSumOfSquare(n: number): number {
     // TODO: implement me
-    return 0;
+    let sum = 0;
+   if(n > 0) {
+       
+       sum = (n * n) + recSumOfSquare(n-1) ;
+   }
+   return sum;
+    //return 0;
 }
 
 
@@ -70,8 +81,8 @@ export function recSumOfSquare(n: number): number {
 Write down two test cases.
 ** ----------------------------------------------------- */
 
-export const test1: [number, number] = [1, 1] // [n1, sumOfSquare(n1)] TODO: change me
-export const test2: [number, number] = [2, 5] // [n2, sumOfSquare(n2)] TODO: change me
+export const test1: [number, number] = [3, 14] // [n1, sumOfSquare(n1)] TODO: change me
+export const test2: [number, number] = [4, 30] // [n2, sumOfSquare(n2)] TODO: change me
 
 
 /* ----------------------------------------------------- **
@@ -100,9 +111,13 @@ export function differentialTest(n: number): boolean {
 
 export const diffTest1: number = 1  // n1, TODO: change me
 export const diffTest2: number = 2  // n2, TODO: change me
+export const diffTest3: number = 3
+export const diffTest4: number = 4
 
 differentialTest(diffTest1);
 differentialTest(diffTest2);
+differentialTest(diffTest3);
+differentialTest(diffTest4);
 
 
 
@@ -190,10 +205,36 @@ Mirrored Postfix
 6 -> 5 -> 3 -> 4 -> 2 -> 1
 ```
 ** ----------------------------------------------------- */
+function appendReverseList<T>(a: List<T>, b: List<T>): List<T>{
+    for(let head = a; head.tag != _List.NIL; head = head.rest){
+        b = Cons(head.contents, b);
+    }
+    
+    return b;
+}
+
 
 export function mirroredPostfix<T>(t: Tree<T>): List<T> {
+     if(t.tag == _Tree.LEAF){
+        return Nil();
+    }
+    
+    let rightlist: List<T> = mirroredPostfix(t.right);
+    let leftlist: List<T> = mirroredPostfix(t.left);
+   
+    
+    
+    
+    
+    let l1:List<T> =  appendReverseList(rightlist, Nil());
+    let l2: List<T> = appendReverseList(leftlist, l1);
+    let l3: List<T> = Cons(t.contents, l2);
+    
+   
+    
+    return appendReverseList(l3, Nil());
     // TODO: Implement me
-    return Nil();
+    //return Nil();
 }
 
 
@@ -217,7 +258,13 @@ Array
 
 export function listToArr<T>(ls: List<T>): T[] {
     // TODO: Implement me
-    return [];
+     let myArray = [];  
+     for(let head = ls; head.tag != _List.NIL; head = head.rest){
+         myArray.push(head);
+     }
+     
+     return myArray;
+    //return [];
 }
 
 
@@ -292,8 +339,21 @@ Tree
 
 // Hint: use recursion with arr.slice 
 export function arrayToTree<T>(arr: T[]): Tree<T> {
+    if(arr.length === undefined){
+        return Leaf();
+    }
+    
+    let half = Math.floor(arr.length / 2);  
+    let firstHalf = arr.slice(0, half-1);
+    let secondHalf = arr.slice(-half);
+    
+    let leftTree = arrayToTree(firstHalf);
+    let rightTree = arrayToTree(secondHalf);
+    
+    
+    return Node(arr[half], leftTree, rightTree);
     // TODO: Implement me
-    return Leaf();
+    //return Leaf();
 }
 
 
@@ -319,7 +379,24 @@ function smallestElementArr2(arr: number[]): number {
 
 export function smallestTree(tr: Tree<number>): number {
     // TODO: Implement me
-    return NaN;
+    if(tr.tag == _Tree.LEAF ){
+        return NaN;
+    }
+        let res = tr.contents;
+        let lres = smallestTree(tr.left);
+        let rres = smallestTree(tr.right);
+   
+        if ((lres != NaN) && (lres < res)){
+            res = lres;
+        }
+    
+        else if ((rres !=NaN) && (rres < res)){
+            res = rres;
+        }
+            
+       
+        return res;
+    //return NaN;
 }
 
 
@@ -345,22 +422,28 @@ Complete the data-type definition below.
 ** ----------------------------------------------------- */
 
 export enum _Hybrid { HLEAF, ONECHILD, TWOCHILD };
-export type Hybrid<T> = {tag: _Hybrid.HLEAF} // TODO: implement the rest
+export type Hybrid<T> = {tag: _Hybrid.HLEAF} 
+                |{tag: _Hybrid.ONECHILD, contents: T, firstchild: Hybrid<T>} 
+                |{tag: _Hybrid.TWOCHILD , contents: T, firstchild: Hybrid<T>, secondchild: Hybrid<T>}; // TODO: implement the rest
+
+
 
 
 export function HLeaf<T>(): Hybrid<T> {
     return {tag: _Hybrid.HLEAF}; // This one is completed/
 }
 
+
 export function OneChild<T>(x: T, child: Hybrid<T>): Hybrid<T> {
     // TODO: implement me
-    return HLeaf();
+    return {tag: _Hybrid.ONECHILD, contents: x, firstchild : child};
 }
 
 export function TwoChild<T>(x: T, left: Hybrid<T>, right: Hybrid<T>): Hybrid<T> {
     // TODO: implement me
-    return HLeaf();
+    return {tag: _Hybrid.TWOCHILD , contents: x, firstchild : left, secondchild : right };
 }
+
 
 
 
@@ -391,8 +474,22 @@ Use OneChild for LeafNodes.
 ```
 ** ----------------------------------------------------- */
 
-export const hybrid1 = HLeaf();  // TODO: implement me
-export const hybrid2 = HLeaf();  // TODO: implement me
+export const hybrid1 = HLeaf(); 
+const hybrid1 = HLeaf();
+const hybridLeafNode1 = OneChild(1,HLeaf());
+const hybridLeafNode4 = OneChild(4,HLeaf());
+const hybridOneChild2 = OneChild(2,hybridLeafNode1);
+const hybridOneChild5 = OneChild(5,hybridLeafNode4);
+export const hybridTwoChild3 = TwoChild(3,hybridOneChild2, hybridOneChild5);// TODO: implement me
+
+
+export const hybrid2 = HLeaf();
+const hybridLeafNode1 = OneChild(1, HLeaf() );
+const hybridLeafNode3 = OneChild(3, HLeaf());
+const hybridLeafNode5 = OneChild(5, HLeaf());
+const hybridOneChild6 = OneChild(6,hybridLeafNode5);
+const hybridTwoChild2 = TwoChild(2,hybridLeafNode1,hybridLeafNode3);
+export const hybridTwoChild4 = TwoChild(4,hybridTwoChild2,hybridOneChild6 );// TODO: implement me
 
 
 
@@ -409,9 +506,27 @@ structure into a Tree structure. When translating a node with
 one child into a node, put the child in the left child.
 ** ----------------------------------------------------- */
 
+function NodeSpecial<T>(x: T, left: Tree<T>): Tree<T> {
+    return {tag: _Tree.NODE, contents: x, left: left, right: Leaf()};
+}
+
+
 function hybridToTree<T>(hybrid: Hybrid<T>): Tree<T> {
     // TODO: implement me
+     
+    if(hybrid.tag === _Hybrid.HLEAF){
+        return Leaf();
+    }else if(hybrid.tag === _Hybrid.ONECHILD){
+        let c = hybridToTree(hybrid.firstchild);
+        return NodeSpecial(hybrid.contents, c);
+    }else if(hybrid.tag === _Hybrid.TWOCHILD){
+        let a = hybridToTree(hybrid.firstchild);
+        let b = hybridToTree(hybrid.secondchild);
+        return Node(hybrid.contents, a, b);
+    }
+    
     return Leaf();
+    
 }
 
 
@@ -493,6 +608,36 @@ URLs (duplicates included) found in the JSON.
 
 export function allURL(json: JSONValue): string[] {
     // TODO: Implement me
+      if(typeof json === null){
+        return [];
+    }  
+    else if(typeof json === "string"){
+        return [];
+    } 
+    else if(typeof json === "object"){
+        if(json.key === "url"){
+           let urlArray: string = []; 
+           urlArray.push(json.url);
+           return urlArray; 
+        } else if(json.key === "links"){
+           return allURL(json.links);
+        }   
+        
+            return [];
+        
+    }    
+    else if(Array.isArray("JSONValue[]")){
+        let result2:string = [];
+        let size = json.length();
+        for(let i = 0; i<size; i++){
+            //let result3: string = [];
+            let result3 = allURL(json[i]);
+            result2.concat(result3);
+           
+        }
+         return result2;
+        
+    }  
     return []
 }
 
@@ -508,6 +653,29 @@ occurs in the JSON object.
 
 export function recCountURL(url: string, json: JSONValue): number {
     // TODO: Implement me
+    if (typeof json === null){
+        return 0;
+    } else if (typeof json === "string"){
+        return 0;
+    } else if (typeof json === "object"){
+        if (json.key == "url"){
+            if (json.url == url_val){
+                return 1;
+            }
+            return 0;
+        } else if (json.key == "links"){
+           return recCountURL(url_val, json.links);
+        } 
+        return 0;
+    }  
+    else if (Array.isArray("JSONValue[]")){
+        let count = 0;
+        for (let i = 0; i < json.length(); i++){
+             count += recCountURL(url_val, json[i]);
+        }
+        return count;
+    }  
+    
     return 0;
 }
 
@@ -521,5 +689,8 @@ function.
 
 export function iterCountURL(url: string, json: JSONValue): number {
     // TODO: Implement me
+    let callStack: [string, Tree<T> | string][] = [];
+    
+    
     return 0;
 }
